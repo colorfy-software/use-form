@@ -155,6 +155,19 @@ export default function useForm<K extends Form>(
   const onHandleSubmit = (): void => {
     const valueKeys = Object.keys(state)
     const validator = formValidation
+
+    setErrors(
+      (function (): { [key in keyof K]: false | string } {
+        let errs = formSchema
+
+        for (const [key] of Object.entries(formSchema)) {
+          errs = { ...errs, [key]: false }
+        }
+
+        return errs
+      })(),
+    )
+
     let currentErrors = errors
 
     const errorsArray = valueKeys.map((key) => {
